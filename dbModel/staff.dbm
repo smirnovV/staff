@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2" last-position="0,0" last-zoom="1" max-obj-count="4"
+	 default-schema="public" default-owner="postgres">
+<role name="staff">
+</role>
+
+<database name="staff" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="staff" layer="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="staff"/>
+</schema>
+
+<table name="organization" layer="0" collapse-mode="2" max-obj-count="3">
+	<schema name="staff"/>
+	<role name="staff"/>
+	<position x="17" y="184"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[УИД]]></comment>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="varchar" length="100"/>
+		<comment><![CDATA[Наименование ]]></comment>
+	</column>
+	<column name="head_organization">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[УИД головного офиса]]></comment>
+	</column>
+	<constraint name="organization_pk" type="pk-constr" table="staff.organization">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="organization_sequence" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="staff"/>
+	<role name="staff"/>
+</sequence>
+
+<table name="staff" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="staff"/>
+	<role name="staff"/>
+	<comment><![CDATA[Сведения об организации]]></comment>
+	<position x="98" y="381"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[УИД]]></comment>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="100"/>
+		<comment><![CDATA[Имя]]></comment>
+	</column>
+	<column name="organization_id" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[УИД организации]]></comment>
+	</column>
+	<column name="boss" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[Руководитель]]></comment>
+	</column>
+	<constraint name="staff_pk" type="pk-constr" table="staff.staff">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="head_organization_FKey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="staff.organization" table="staff.organization">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="head_organization" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="staff_boss_FKey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="staff.staff" table="staff.staff">
+	<columns names="boss" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="staff_organization_FKey" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="staff.organization" table="staff.staff">
+	<columns names="organization_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_organization_organization" type="relfk" layer="0"
+	 src-table="staff.organization"
+	 dst-table="staff.organization" reference-fk="head_organization_FKey"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="334.54" y="227.083"/>
+	<position x="334.54" y="161"/>
+	<position x="213.36" y="161"/>
+	</line>
+</relationship>
+
+<relationship name="rel_staff_staff" type="relfk" layer="0"
+	 src-table="staff.staff"
+	 dst-table="staff.staff" reference-fk="staff_boss_FKey"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="412.352" y="435.15"/>
+	<position x="412.352" y="358"/>
+	<position x="292.235" y="358"/>
+	</line>
+</relationship>
+
+<relationship name="rel_staff_organization" type="relfk" layer="0"
+	 src-table="staff.staff"
+	 dst-table="staff.organization" reference-fk="staff_organization_FKey"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>

@@ -1,0 +1,19 @@
+version: "3"
+services:
+  staff:
+    build: staff-api
+    ports:
+      - "9003:8080"
+    restart: unless-stopped
+    depends_on:
+      - staff_db
+
+  staff_db:
+    image: postgres:13.3
+    container_name: staff_db
+    environment:
+      - POSTGRES_USER=staff
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=staff
+    ports:
+      - "9002:5432"
