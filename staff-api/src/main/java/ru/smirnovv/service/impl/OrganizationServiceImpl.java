@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.smirnovv.entity.Organization;
-import ru.smirnovv.exception.DeleteHeadOrganizationException;
-import ru.smirnovv.exception.OrganizationCreationException;
+import ru.smirnovv.exception.DeletionHeadOrganizationException;
+import ru.smirnovv.exception.UpdateOrganizationException;
 import ru.smirnovv.exception.OrganizationNotFoundException;
 import ru.smirnovv.repository.OrganizationRepository;
 import ru.smirnovv.service.OrganizationService;
@@ -39,21 +39,24 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public void delete(long id) {
         if (organizationRepository.countAllByHeadOrganizationId(id) != 0) {
-            throw new DeleteHeadOrganizationException();
+            throw new DeletionHeadOrganizationException();
         }
         organizationRepository.deleteById(id);
     }
 
     @Override
     public void update(long id, String name, Long headOrganizationId) {
-        Organization headOrganization = organizationRepository.getById(headOrganizationId);
-
         Organization organization = organizationRepository.findById(id)
                                                           .orElseThrow(OrganizationNotFoundException::new);
         organization.setName(name);
-        organization.setHeadOrganization(headOrganization);
 
-        validateTree(organization, headOrganization);
+        if(!Objects.isNull(headOrganizationId)) {
+            Organization headOrganization = organizationRepository.findById(headOrganizationId)
+                                                                  .orElseThrow(OrganizationNotFoundException::new);
+
+            organization.setHeadOrganization(headOrganization);
+            validateTree(organization, headOrganization);
+        }
 
         organizationRepository.save(organization);
     }
@@ -70,7 +73,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         while (!subsidiaries.isEmpty()) {
             if (subsidiaries.contains(headOrganization.getId())) {
-                throw new OrganizationCreationException();
+                throw new UpdateOrganizationException();
             }
 
             List<Long> newSubsidiaries = organizationRepository.findOrganizationsByHeadOrganizationIdIn(subsidiaries)

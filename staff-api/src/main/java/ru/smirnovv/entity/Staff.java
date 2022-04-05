@@ -6,24 +6,36 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
 
+/**
+ * Сведения о сотруднике
+ */
 @Entity
 public class Staff extends AbstractPersistable<Long> {
 
+    /**
+     * Имя сотркдника
+     */
     @Getter
     @Setter
     @Column
     private String name;
 
+    /**
+     * Организация
+     */
     @Getter
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
+    /**
+     * Начальник
+     */
     @Getter
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "boss")
     private Staff boss;
 
 }

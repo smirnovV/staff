@@ -4,17 +4,17 @@ create sequence hibernate_sequence;
 CREATE TABLE organization
 (
     id                bigint       NOT NULL UNIQUE,
-    "Name"            varchar(100) NOT NULL,
+    name            varchar(100) NOT NULL,
     head_organization bigint,
     CONSTRAINT organization_pk PRIMARY KEY (id)
 );
 
 COMMENT ON COLUMN organization.id IS 'УИД';
-COMMENT ON COLUMN organization."Name" IS 'Наименование';
+COMMENT ON COLUMN organization.name IS 'Наименование';
 COMMENT ON COLUMN organization.head_organization IS 'УИД головного офиса';
 
 ALTER TABLE organization
-    ADD CONSTRAINT "head_organization_FKey" FOREIGN KEY (head_organization)
+    ADD CONSTRAINT head_organization_FKey FOREIGN KEY (head_organization)
         REFERENCES organization (id) MATCH FULL
         ON DELETE NO ACTION ON UPDATE NO ACTION;
 
