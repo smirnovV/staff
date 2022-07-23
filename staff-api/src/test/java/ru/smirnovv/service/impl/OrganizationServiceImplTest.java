@@ -5,8 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.smirnovv.entity.Organization;
-import ru.smirnovv.exception.DeletionHeadOrganizationException;
-import ru.smirnovv.exception.UpdateOrganizationException;
+import ru.smirnovv.exception.organization.DeletionHeadOrganizationException;
+import ru.smirnovv.exception.organization.UpdateOrganizationException;
 import ru.smirnovv.repository.OrganizationRepository;
 import ru.smirnovv.service.OrganizationService;
 

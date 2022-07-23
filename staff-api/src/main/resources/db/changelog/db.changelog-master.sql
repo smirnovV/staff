@@ -4,7 +4,7 @@ create sequence hibernate_sequence;
 CREATE TABLE organization
 (
     id                bigint       NOT NULL UNIQUE,
-    name            varchar(100) NOT NULL,
+    name              varchar(100) NOT NULL,
     head_organization bigint,
     CONSTRAINT organization_pk PRIMARY KEY (id)
 );

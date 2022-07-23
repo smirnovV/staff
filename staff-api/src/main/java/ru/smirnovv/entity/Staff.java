@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Сведения о сотруднике
@@ -13,7 +17,7 @@ import javax.persistence.*;
 public class Staff extends AbstractPersistable<Long> {
 
     /**
-     * Имя сотркдника
+     * Имя сотрудника
      */
     @Getter
     @Setter

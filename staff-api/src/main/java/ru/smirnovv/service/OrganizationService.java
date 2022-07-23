@@ -41,4 +41,13 @@ public interface OrganizationService {
      * @return страница организации
      */
     List<Organization> getPage(Pageable pageable);
+
+    /**
+     * Получить организацию по УИД
+     *
+     * @param id УИД организации
+     * @return организация
+     */
+    Organization getOrganization(Long id);
+
 }

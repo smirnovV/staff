@@ -5,10 +5,9 @@ import org.springframework.stereotype.Repository;
 import ru.smirnovv.entity.Organization;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface OrganizationRepository extends JpaRepository<Organization,Long> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 
     /**
      * Подсчитать количество дочерних организации.

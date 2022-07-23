@@ -5,16 +5,17 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.smirnovv.entity.Organization;
-import ru.smirnovv.exception.DeletionHeadOrganizationException;
-import ru.smirnovv.exception.UpdateOrganizationException;
-import ru.smirnovv.exception.OrganizationNotFoundException;
+import ru.smirnovv.exception.organization.OrganizationNotFoundException;
+import ru.smirnovv.exception.organization.UpdateOrganizationException;
+import ru.smirnovv.exception.staff.DeletionBossStaffException;
 import ru.smirnovv.repository.OrganizationRepository;
 import ru.smirnovv.service.OrganizationService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 @Lazy
 @Service
@@ -28,8 +29,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization organization = new Organization();
         organization.setName(name);
 
-        if (!Objects.isNull(headOrganizationId)) {
-            Organization headOrganization = organizationRepository.getById(headOrganizationId);
+        if (!isNull(headOrganizationId)) {
+            Organization headOrganization = getOrganization(headOrganizationId);
             organization.setHeadOrganization(headOrganization);
         }
 
@@ -39,24 +40,23 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public void delete(long id) {
         if (organizationRepository.countAllByHeadOrganizationId(id) != 0) {
-            throw new DeletionHeadOrganizationException();
+            throw new DeletionBossStaffException("");
         }
         organizationRepository.deleteById(id);
     }
 
     @Override
     public void update(long id, String name, Long headOrganizationId) {
-        Organization organization = organizationRepository.findById(id)
-                                                          .orElseThrow(OrganizationNotFoundException::new);
+        Organization organization = getOrganization(id);
         organization.setName(name);
 
-        if(!Objects.isNull(headOrganizationId)) {
-            Organization headOrganization = organizationRepository.findById(headOrganizationId)
-                                                                  .orElseThrow(OrganizationNotFoundException::new);
+        Organization headOrganization = isNull(headOrganizationId) ? null : getOrganization(headOrganizationId);
 
-            organization.setHeadOrganization(headOrganization);
+        if (!isNull(headOrganizationId)) {
             validateTree(organization, headOrganization);
         }
+
+        organization.setHeadOrganization(headOrganization);
 
         organizationRepository.save(organization);
     }
@@ -67,13 +67,19 @@ public class OrganizationServiceImpl implements OrganizationService {
                                      .toList();
     }
 
+    @Override
+    public Organization getOrganization(Long id) {
+        return organizationRepository.findById(id)
+                                     .orElseThrow(() -> new OrganizationNotFoundException(id));
+    }
+
     private void validateTree(Organization organization, Organization headOrganization) {
         List<Long> subsidiaries = new ArrayList<>();
         subsidiaries.add(organization.getId());
 
         while (!subsidiaries.isEmpty()) {
             if (subsidiaries.contains(headOrganization.getId())) {
-                throw new UpdateOrganizationException();
+                throw new UpdateOrganizationException("");
             }
 
             List<Long> newSubsidiaries = organizationRepository.findOrganizationsByHeadOrganizationIdIn(subsidiaries)
@@ -84,4 +90,5 @@ public class OrganizationServiceImpl implements OrganizationService {
             subsidiaries.addAll(newSubsidiaries);
         }
     }
+
 }
