@@ -63,14 +63,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<Organization> getPage(Pageable pageable) {
-        return organizationRepository.findAll(pageable)
-                                     .toList();
+        return organizationRepository.findAll(pageable).toList();
     }
 
     @Override
     public Organization getOrganization(Long id) {
-        return organizationRepository.findById(id)
-                                     .orElseThrow(() -> new OrganizationNotFoundException(id));
+        return organizationRepository.findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
     }
 
     private void validateTree(Organization organization, Organization headOrganization) {
@@ -82,10 +80,9 @@ public class OrganizationServiceImpl implements OrganizationService {
                 throw new UpdateOrganizationException("");
             }
 
-            List<Long> newSubsidiaries = organizationRepository.findOrganizationsByHeadOrganizationIdIn(subsidiaries)
-                                                               .stream()
-                                                               .map(Organization::getId)
-                                                               .collect(Collectors.toList());
+            List<Long> newSubsidiaries =
+                    organizationRepository.findOrganizationsByHeadOrganizationIdIn(subsidiaries).stream()
+                                          .map(Organization::getId).collect(Collectors.toList());
             subsidiaries.clear();
             subsidiaries.addAll(newSubsidiaries);
         }

@@ -13,22 +13,20 @@ import javax.persistence.ManyToOne;
 /**
  * Сведения о сотруднике
  */
+@Getter
+@Setter
 @Entity
 public class Staff extends AbstractPersistable<Long> {
 
     /**
      * Имя сотрудника
      */
-    @Getter
-    @Setter
     @Column
     private String name;
 
     /**
      * Организация
      */
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
     private Organization organization;
@@ -36,8 +34,6 @@ public class Staff extends AbstractPersistable<Long> {
     /**
      * Начальник
      */
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boss")
     private Staff boss;

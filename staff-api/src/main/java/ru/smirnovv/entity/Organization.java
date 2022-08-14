@@ -13,22 +13,20 @@ import javax.persistence.ManyToOne;
 /**
  * Сведения об организации
  */
+@Getter
+@Setter
 @Entity
 public class Organization extends AbstractPersistable<Long> {
 
     /**
      * Название организации
      */
-    @Getter
-    @Setter
     @Column
     private String name;
 
     /**
      * Головная организация
      */
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "head_organization")
     private Organization headOrganization;

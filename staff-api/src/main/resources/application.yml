@@ -2,10 +2,16 @@ spring:
   datasource:
     username: staff
     password: password
-    url: jdbc:postgresql://localhost:9001/staff
+    url: jdbc:postgresql://localhost:5433/staff
+  security:
+    basic:
+      enabled: false
   jpa:
     database: DEFAULT
     hibernate.ddl-auto: validate
     show-sql: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.sql
+security:
+  basic:
+    enabled: false

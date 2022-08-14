@@ -15,9 +15,8 @@ public class StaffController {
     private final StaffService staffService;
 
     @PutMapping("/create")
-    public void create(@RequestParam final String name,
-                       @RequestParam final Long bossId,
-                       @RequestParam final Long organizationId) {
+    public void create(
+            @RequestParam final String name, @RequestParam final Long bossId, @RequestParam final Long organizationId) {
         staffService.create(name, bossId, organizationId);
     }
 

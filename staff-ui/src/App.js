@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {PropTypes, useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -11,10 +11,20 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import {request} from "./action";
 
 const drawerWidth = 240;
 
 function App() {
+    const [staffList, setStaffList] = useState([]);
+
+    useEffect( () => {
+        request('http://localhost:8080/organization')
+            .then(setStaffList);
+    }, [] );
+
+
+
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>

@@ -44,8 +44,9 @@ public class StaffServiceImpl implements StaffService {
     }
 
     private Staff getStaff(Long id) {
-        return staffRepository.findById(id)
-                              .orElseThrow(() -> {throw new StaffNotFoundException("");});
+        return staffRepository.findById(id).orElseThrow(() -> {
+            throw new StaffNotFoundException("");
+        });
     }
 
     @Override
@@ -76,8 +77,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public List<Staff> getPage(Pageable pageable) {
-        return staffRepository.findAll(pageable)
-                              .toList();
+        return staffRepository.findAll(pageable).toList();
     }
 
     private void validateTree(Staff staff, Staff boss) {
@@ -89,10 +89,9 @@ public class StaffServiceImpl implements StaffService {
                 throw new UpdateOrganizationException("");
             }
 
-            List<Long> newSubsidiaries = staffRepository.findOrganizationsByBossIdIn(subordinates)
-                                                        .stream()
-                                                        .map(Staff::getId)
-                                                        .collect(Collectors.toList());
+            List<Long> newSubsidiaries =
+                    staffRepository.findOrganizationsByBossIdIn(subordinates).stream().map(Staff::getId)
+                                   .collect(Collectors.toList());
             subordinates.clear();
             subordinates.addAll(newSubsidiaries);
         }

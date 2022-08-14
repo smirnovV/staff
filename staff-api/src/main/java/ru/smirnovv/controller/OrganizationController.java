@@ -1,8 +1,6 @@
 package ru.smirnovv.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +9,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.smirnovv.entity.Organization;
-import ru.smirnovv.service.OrganizationService;
+import ru.smirnovv.controller.dto.OrganizationDTO;
+import ru.smirnovv.controller.dto.PageInfo;
+import ru.smirnovv.facade.OrganizationFacade;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class OrganizationController {
     /**
      * Сервис управления сведениями об организациях
      */
-    private final OrganizationService organizationService;
+    private final OrganizationFacade organizationFacade;
 
     /**
      * Создать организацию
@@ -37,7 +36,7 @@ public class OrganizationController {
      */
     @PutMapping("/create")
     public void create(@RequestParam final String name, @RequestParam final Long headOrganizationId) {
-        organizationService.create(name, headOrganizationId);
+        organizationFacade.create(name, headOrganizationId);
     }
 
     /**
@@ -47,7 +46,7 @@ public class OrganizationController {
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable final long id) {
-        organizationService.delete(id);
+        organizationFacade.delete(id);
     }
 
     /**
@@ -58,22 +57,32 @@ public class OrganizationController {
      * @param headOrganizationId УИД головной организации
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable final long id,
-                       @RequestParam final String name,
-                       @RequestParam final Long headOrganizationId) {
-        organizationService.update(id, name, headOrganizationId);
+    public void update(
+            @PathVariable final long id, @RequestParam final String name, @RequestParam final Long headOrganizationId) {
+        organizationFacade.update(id, name, headOrganizationId);
     }
 
     /**
      * Получить лист организации
      *
-     * @param pageable пагинация страницы
+     * @param pageInfo пагинация страницы
      * @return лист организации
      */
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("")
-    public List<Organization> getPage(@PageableDefault(sort = "id") final Pageable pageable) {
-        return organizationService.getPage(pageable);
+    @CrossOrigin("http://localhost:3000")
+    public List<OrganizationDTO> getPage(final PageInfo pageInfo) {
+        return organizationFacade.getPage(pageInfo);
+    }
+
+    /**
+     * Получить список организации
+     *
+     * @return список организации
+     */
+    @GetMapping("")
+    @CrossOrigin("http://localhost:3000")
+    public List<OrganizationDTO> getAll() {
+        return organizationFacade.getAll();
     }
 
 }
